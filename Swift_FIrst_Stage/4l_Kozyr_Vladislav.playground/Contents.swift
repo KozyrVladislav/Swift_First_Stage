@@ -1,125 +1,49 @@
 import UIKit
 
 
-//1. Описать несколько структур – любой легковой автомобиль и любой грузовик.
-//
-//2. Структуры должны содержать марку авто, год выпуска, -объем багажника/кузова-, запущен ли двигатель, открыты ли окна, *заполненный объем багажника*.
-//
-//3. Описать перечисление с возможными действиями с автомобилем: запустить/заглушить двигатель, открыть/закрыть окна, **погрузить/выгрузить из кузова/багажника груз определенного объема**.
-//
-//4. Добавить в структуры метод с одним аргументом типа перечисления, который будет менять свойства структуры в зависимости от действия.
-//
-//5. Инициализировать несколько экземпляров структур. Применить к ним различные действия.
-//
-//6. Вывести значения свойств экземпляров в консоль.
+/*1. Описать класс Car c общими свойствами автомобилей и пустым методом действия по аналогии с прошлым заданием.
+ 
+ 2. Описать пару его наследников trunkCar и sportСar. Подумать, какими отличительными свойствами обладают эти автомобили. Описать в каждом наследнике специфичные для него свойства.
+ 
+ 3. Взять из прошлого урока enum с действиями над автомобилем. Подумать, какие особенные действия имеет trunkCar, а какие – sportCar. Добавить эти действия в перечисление.
+ 
+ 4. В каждом подклассе переопределить метод действия с автомобилем в соответствии с его классом.
+ 
+ 5. Создать несколько объектов каждого класса. Применить к ним различные действия.
+ 
+ 6. Вывести значения свойств экземпляров в консоль.*/
 
 
-enum WindowState {
+//!!НЕ ПОЛУЧАЕТСЯ ИНИЦИАЛИЗИРОВАТЬ ФУНКЦИИ В ЧЕМ МОЖЕТ БЫТЬ ПРОБЛЕМА?
+
+
+enum WindowState {              // создал перечисления значений параметров автомобиля
     case open, close
 }
 enum StartEngine {
     case start, stop
 }
 enum Transmission {
-    case manual, auto       // создал перечисления значений параметров автомобиля
+    case manual, auto
 }
 enum FillingVolume {
     case load0, unload0
     case load, unload
 }
-
-
-
-struct Sedan {              // создал структуру легкового автомобиля с нужными по условиям параметрами
-    var brand: String
-    var year: Int
-    var volume: Double      // код ниже рабочий, загружает багаж вот таким образом "car1.volume = 1540", оставил на всякий случай, вдруг я не так понял задание, но закоментил, что бы не мешал реализации кода fillingVolume. Оставил этот код в структуре грузовика.
-    
-//    {
-//    didSet {
-//    let mesto = oldValue
-//            print("Full Volume: \(mesto)") //пишем сколько полный объем
-//    }
-//    willSet {
-//    let mesto = newValue
-//        if (mesto < 0) || (mesto > volume) { //если заполненное место получилось больше фактического или отрицательным то выводим ошибку
-//            print("ERROR")
-//        } else {
-//            print("Filled Volume: \(mesto)") //пишем сколько заполнили места
-//        }
-//    }
-//}
-    
-    //=========================================================
-    var fillingVolume: FillingVolume {
-        willSet {
-            let stuff: Double = 10
-            if newValue == .load {            // загрузка груза
-                
-                if (volume >= stuff) && (stuff > 0) {
-                    volume = volume - stuff
-                    print("Груз объемом \(stuff) загружен")
-                    print("Осталось свободного места: \(volume)")
-                } else {print("Груз не влезает!")}
-                
-            } else if newValue == .unload {           // выгрузка груза
-                
-                if (stuff > 0) && (volume < 1540) {     //!!!ВОПРОС!!! долго разбирался, но так и не понял как вместо вручную вбитых "1540" подставить изначальное значение volume? пробовал вводить переменные вроде "var a = volume", что бы загрузить в "а" изначальное значение "volume" до всех манипуляций, но так оно не работает...
-                    volume = volume + stuff
-                    print("Груз объемом \(stuff) выгружен")
-                    print("Осталось свободного места: \(volume)")
-                } else {print("Выгружать нечего, автомобиль пуст!")}
-            }
-        }
-    }
-    
-    //=========================================================
-    let transmission: Transmission
-    let engine: StartEngine
-    var windowState: WindowState {
-    willSet {
-        if newValue == .open {
-            print("Windows is opening")
-        } else {
-            print("Windows is closing")
-        }
-}
-    }
-    //============================================//функции добавлены только в структуру седан, просто что бы поиграться значениями
-    mutating func closeWindow() {
-        self.windowState = .close
-    }
-    
-    mutating func openWindow() {
-        self.windowState = .open
-    }
-    
-    func printVolume() {
-        print("Максимальный объем багажника: \(volume)")
-    }
-    //=============================================
+enum AttachTrailer {
+    case attach, detach
 }
 
+enum NitroStart {
+    case yes, no
+}
 
-
-struct Truck {              // грузовой авто, здесь все то же самое
+class Car {              // создал "родительский" класс автомобиля
+    static var carCount = 0
     var brand: String
     var year: Int
     var volume: Double
-    {      //===========================в этой структуре код отключать не стал, потому что не перенес fillingVolume из структуры SEDAN, чтобы посмотреть разницу
-        didSet {
-            let mesto = oldValue
-                print("Full Volume: \(mesto)")
-        }
-        willSet {
-            let mesto = newValue
-            if (mesto < 0) || (mesto > volume)  {
-                print("ERROR")
-            } else {
-                print("Filled Volume: \(mesto)")
-            }
-        }
-    } //==========================================до сих пор
+    var fillingVolume: FillingVolume
     let transmission: Transmission
     let engine: StartEngine
     var windowState: WindowState {
@@ -131,15 +55,130 @@ struct Truck {              // грузовой авто, здесь все то
             }
         }
     }
+    init(brand: String, year: Int, volume: Double, fillingVolume: FillingVolume, transmission: Transmission, engine: StartEngine, windowState: WindowState) {
+        self.brand = brand
+        self.year = year
+        self.volume = volume
+        self.fillingVolume = fillingVolume
+        self.transmission = transmission
+        self.engine = engine
+        self.windowState = windowState
+        Car.carCount += 1                   //счетчик количества автомобилей
+    }
+
+    deinit {
+        Car.carCount -= 1
+    }
+
+    static func countInfo() {                //функция вывода количества автомобилей
+        print("Выпущено \(self.carCount) автомобилей")
+    }
+
+    func windowOpen() {                       // функция ручного открытия окон
+        if self.windowState == .close {
+            windowState = .open
+            print("Окно открыто вручную")
+
+        } else {
+            print("Окно уже открыто")
+        }
+    }
+    func windowClose() {                      // функция ручного закрытия окон
+        if windowState == .open {
+            windowState = .close
+            print("Окно закрыто вручную")
+
+        } else {
+            print("Окно уже закрыто")
+        }
+    }
 }
-// ниже создаем 4 разных автомобиля
-var car1 = Sedan(brand: "BMW", year: 2018, volume: 500, fillingVolume: .load0, transmission: .auto, engine: .start, windowState: .open)
-var car2 = Sedan(brand: "AUDI", year: 2015, volume: 600, fillingVolume: .load0, transmission: .auto, engine: .stop, windowState: .close)
-var car3 = Truck(brand: "MAN", year: 2012, volume: 50000, transmission: .manual, engine: .stop, windowState: .close)
-var car4 = Truck(brand: "VOLVO", year: 2016, volume: 52000, transmission: .auto, engine: .start, windowState: .open)
+//======================================== Класс Грузовик
 
+class TrunkCar: Car {                           // создал грузовой авто - наследника Car
+    var attachTrailer: AttachTrailer            // добавил возможность прикрепить/открепить прицеп
+    init(brand: String, year: Int, volume: Double, fillingVolume: FillingVolume, transmission: Transmission, engine: StartEngine, windowState: WindowState, attachTrailer: AttachTrailer) {
+        self.attachTrailer = attachTrailer
+        super.init(brand: brand, year: year, volume: volume, fillingVolume: fillingVolume, transmission: transmission, engine: engine, windowState: windowState)
+    }
+    func attach() {
+        attachTrailer = .attach
+    }
 
-func PrintCars () {                             // функция принтует заданные параметры структур
+    func detach() {
+        attachTrailer = .detach
+    }
+}
+
+//======================================== Класс Спорткар
+
+class SportСar: Car {                           // создал спортивный авто - наследника Car
+    var nitroStart: NitroStart                  // добавил возможность устанавливать на спорткары нитро
+    init(brand: String, year: Int, volume: Double, fillingVolume: FillingVolume, transmission: Transmission, engine: StartEngine, windowState: WindowState, nitroStart: NitroStart) {
+        self.nitroStart = nitroStart
+        super.init(brand: brand, year: year, volume: volume, fillingVolume: fillingVolume, transmission: transmission, engine: engine, windowState: windowState)
+    }
+    func yesNOS(){
+        nitroStart = .yes
+    }
+
+    func noNOS(){
+        nitroStart = .no
+    }
+    override func windowOpen(){
+        print("Мама запретила открывать окна, продует!")
+    }
+    override func windowClose() {
+        print("Окна закрыты, молодец!")
+    }
+}
+
+final class DecorativeCar: SportСar {
+    
+    override func yesNOS(){
+        super.yesNOS()
+        print("Нельзя заправлять баллоны на выстовочном авто!")
+    }
+    
+    override func noNOS(){
+       print("На выстовочном авто баллоны не заправлены, расслабься!")
+    }
+
+}
+
+var car1 = Car(brand: "BMW", year: 2018, volume: 500, fillingVolume: .load0, transmission: .auto, engine: .start, windowState: .open)
+print(car1.brand)
+print(car1.year)
+car1.year = 2008
+print(car1.year)
+
+var car2 = TrunkCar(brand: "MAN", year: 2014, volume: 60000, fillingVolume: .load, transmission: .manual, engine: .start, windowState: .open, attachTrailer: .attach)
+print(car2.brand)
+print(car2.year)
+car2.year = 2008
+print(car2.year)
+
+var car3 = SportСar(brand: "Lamborgini", year: 2018, volume: 100, fillingVolume: .load0, transmission: .auto, engine: .start, windowState: .close, nitroStart: .yes)
+print(car3.brand)
+print(car3.year)
+car3.year = 2008
+print(car3.year)
+
+var car4 = SportСar(brand: "Ferrari", year: 2016, volume: 0, fillingVolume: .load0, transmission: .auto, engine: .start, windowState: .close, nitroStart: .yes)
+print(car4.brand)
+print(car4.year)
+car4.year = 2008
+print(car4.year)
+
+var car5 = SportСar(brand: "Nissan 350Z", year: 1999, volume: 0, fillingVolume: .load0, transmission: .manual, engine: .stop, windowState: .close, nitroStart: .no)
+print(car5.brand)
+print(car5.year)
+car5.year = 2008
+print(car5.year)
+
+print(Car.carCount)
+
+func PrintCar () {                             // функция принтует заданные параметры структур - Вопрос как сделать так что бы можно было менять пармаетр car1 в этой функции на car2/car3 и тд, что бы выводить данные по нужному авто?
     print("Характеристики автомобиля \(car1.brand):")
     print("1.Год выпуска: \(car1.year)")
     print("2.Состояние двигателя: \(car1.engine)")
@@ -149,54 +188,15 @@ func PrintCars () {                             // функция принтуе
     car1.volume = 1540
     car1.windowState = .close
     print("=========================================")
-
-    print("Характеристики автомобиля \(car2.brand):")
-    print("1.Год выпуска: \(car2.year)")
-    print("2.Состояние двигателя: \(car2.engine)")
-    print("3.Коробка передач: \(car2.transmission)")
-    print("4.Положение окон: \(car2.windowState)")
-    print("5.Полный объем багажника: \(car2.volume)")
-    car2.volume = 333
-    car2.windowState = .open
-    print("=========================================")
-
-    print("Характеристики автомобиля \(car3.brand):")
-    print("1.Год выпуска: \(car3.year)")
-    print("2.Состояние двигателя: \(car3.engine)")
-    print("3.Коробка передач: \(car3.transmission)")
-    print("4.Положение окон: \(car3.windowState)")
-    print("5.Полный объем багажника: \(car3.volume)")
-    car3.volume = 2540-pow(12, 3)
-    car3.windowState = .open
-    print("=========================================")
-
-    print("Характеристики автомобиля \(car4.brand):")
-    print("1.Год выпуска: \(car4.year)")
-    print("2.Состояние двигателя: \(car4.engine)")
-    print("3.Коробка передач: \(car4.transmission)")
-    print("4.Положение окон: \(car4.windowState)")
-    print("5.Полный объем багажника: \(car4.volume)")
-    car4.volume = 6000 * 20
-    car4.windowState = .close
-    print("=========================================")
 }
-PrintCars()
-
-car2.openWindow()
-car1.printVolume()
-let car1Trancmission = Transmission.auto
-print(car1Trancmission)
-print("=========================================")
-car1.fillingVolume = .unload
-car1.fillingVolume = .unload
-car1.fillingVolume = .unload
-print("=========================================")
-car1.fillingVolume = .load
-car1.fillingVolume = .load
-car1.fillingVolume = .load
-car1.fillingVolume = .load
-print("=========================================")
-car1.fillingVolume = .unload
-car1.fillingVolume = .unload
-print("=========================================")
-car4.volume = 2000 * 20
+PrintCar ()
+//!!НЕ ПОЛУЧАЕТСЯ ИНИЦИАЛИЗИРОВАТЬ ЭТИ ФУНКЦИИ. В ЧЕМ МОЖЕТ БЫТЬ ПРОБЛЕМА?
+//yesNOS()
+//noNOS()
+//attach()
+//detach()
+//windowOpen()
+//windowClose()
+//countInfo()
+//================================================
+print("Всего автомобилей в нашем автопарке: \(Car.carCount)")
