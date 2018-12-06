@@ -14,7 +14,6 @@ import UIKit
  6. Вывести значения свойств экземпляров в консоль.*/
 
 
-
 enum WindowState {              // создал перечисления значений параметров автомобиля
     case open, close
 }
@@ -63,20 +62,20 @@ class Car {              // создал "родительский" класс �
         self.windowState = windowState
         Car.carCount += 1                   //счетчик количества автомобилей
     }
-
+    
     deinit {
         Car.carCount -= 1
     }
-
+    
     static func countInfo() {                //функция вывода количества автомобилей
         print("Выпущено \(self.carCount) автомобилей")
     }
-
+    
     func windowOpen() {                       // функция ручного открытия окон
         if self.windowState == .close {
             windowState = .open
             print("Окно открыто вручную")
-
+            
         } else {
             print("Окно уже открыто")
         }
@@ -85,10 +84,19 @@ class Car {              // создал "родительский" класс �
         if windowState == .open {
             windowState = .close
             print("Окно закрыто вручную")
-
+            
         } else {
             print("Окно уже закрыто")
         }
+    }
+    func PrintCar () {                             // функция принтует заданные параметры структур - Вопрос как сделать так что бы можно было менять пармаетр car1 в этой функции на car2/car3 и тд, что бы выводить данные по нужному авто?
+        print("Характеристики автомобиля \(self.brand):")
+        print("1.Год выпуска: \(self.year)")
+        print("2.Состояние двигателя: \(self.engine)")
+        print("3.Коробка передач: \(self.transmission)")
+        print("4.Положение окон: \(self.windowState)")
+        print("5.Полный объем багажника: \(self.volume)")
+        print("=========================================")
     }
 }
 //======================================== Класс Грузовик
@@ -102,7 +110,7 @@ class TrunkCar: Car {                           // создал грузовой
     func attach() {
         attachTrailer = .attach
     }
-
+    
     func detach() {
         attachTrailer = .detach
     }
@@ -119,7 +127,7 @@ class SportСar: Car {                           // создал спортив�
     func yesNOS(){
         nitroStart = .yes
     }
-
+    
     func noNOS(){
         nitroStart = .no
     }
@@ -139,9 +147,9 @@ final class DecorativeCar: SportСar {
     }
     
     override func noNOS(){
-       print("На выстовочном авто баллоны не заправлены, расслабься!")
+        print("На выстовочном авто баллоны не заправлены, расслабься!")
     }
-
+    
 }
 
 var car1 = Car(brand: "BMW", year: 2018, volume: 500, fillingVolume: .load0, transmission: .auto, engine: .start, windowState: .open)
@@ -173,24 +181,23 @@ print(car5.brand)
 print(car5.year)
 car5.year = 2008
 print(car5.year)
+var car6 = DecorativeCar(brand: "Nissan Skyline", year: 1998, volume: 0, fillingVolume: .load0, transmission: .manual, engine: .stop, windowState: .close, nitroStart: .no)
+print(car6.brand)
+print(car6.year)
+car6.year = 2008
+print(car6.year)
+
 
 print(Car.carCount)
 
-func PrintCar () {                             // функция принтует заданные параметры структур - Вопрос как сделать так что бы можно было менять пармаетр car1 в этой функции на car2/car3 и тд, что бы выводить данные по нужному авто?
-    print("Характеристики автомобиля \(car1.brand):")
-    print("1.Год выпуска: \(car1.year)")
-    print("2.Состояние двигателя: \(car1.engine)")
-    print("3.Коробка передач: \(car1.transmission)")
-    print("4.Положение окон: \(car1.windowState)")
-    print("5.Полный объем багажника: \(car1.volume)")
-    car1.volume = 1540
-    car1.windowState = .close
-    print("=========================================")
-}
-PrintCar ()
-
+car1.PrintCar ()
+car2.PrintCar ()
+car3.PrintCar ()
+car4.PrintCar ()
+car5.PrintCar ()
+car6.PrintCar ()
 //================================================
-car5.yesNOS()
+car4.yesNOS()
 car5.noNOS()
 car2.attach()
 car2.detach()
@@ -200,3 +207,6 @@ Car.countInfo()
 car1=car2
 car3=car4
 print("Всего автомобилей в нашем автопарке: \(Car.carCount)")
+car6.yesNOS()
+car6.noNOS()
+
