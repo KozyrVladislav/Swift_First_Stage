@@ -181,8 +181,7 @@ PrintLine ()
 //print(excludeArray)
 
 
-
-// ниже примеры замыканий из урока 6 ============================================
+// ===========================================ниже примеры замыканий из урока 6 ============================================
 
 
 //let closure: (Int, Int) -> Bool = {(itemOne: Int, itemTwo: Int) -> Bool in
@@ -199,8 +198,6 @@ PrintLine ()
 //let queueClosure = odd(22)
 //print(queueClosure)
 //
-
-
 
 
 //let odd: (Int) -> Bool = {(element: Int) -> Bool in
