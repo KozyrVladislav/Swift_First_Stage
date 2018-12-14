@@ -68,7 +68,7 @@ struct Queue<T: Salaryable> {
     }
     
     // создаем subscript, который будет возвращать ошибку в случае обращения к несуществующему индексу
-    subscript (elements: UInt ...) -> Bool? {
+    subscript (elements: UInt ...) -> T? {
         for index in elements where (index > self.elements.count) || (index < 1 && self.elements.count < 1) {
             print("Error: Такого сотрудника больше не существует...")
         }
