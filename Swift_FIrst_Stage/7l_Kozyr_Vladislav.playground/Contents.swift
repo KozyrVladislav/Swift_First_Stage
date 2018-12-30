@@ -50,11 +50,25 @@ extension Person: CustomStringConvertible {
 
 let workers = WorkersTeam()
 do {
-    let worker = try workers.getInfo(number: "0030")
+    let worker = try workers.getInfo(number: "003")
     print(worker.description)
 } catch WorkersTeamError.notFound {
     print("Ошибка! Работник не найден.")
         
     }
 
+do {
+    let worker = try workers.getInfo(number: "001")
+    print(worker.description)
+} catch WorkersTeamError.notFound {
+    print("Ошибка! Работник не найден.")
+    
+}
 
+do {
+    let worker = try workers.getInfo(number: "0030")
+    print(worker.description)
+} catch WorkersTeamError.notFound {
+    print("Ошибка! Работник не найден.")
+    
+}
